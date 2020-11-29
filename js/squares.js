@@ -1,11 +1,11 @@
 // constants
 const FPS = 30;
-const DECAY = 0.5;
-const CIRCLE_SIZE = 0.5;
+const CELL_SIZE = 50;
+const SPIN_SPEED = 0.1;
 const COLOR_SPEED = 10;
 
 // states
-var events = [];
+var squares = [];
 var color = 0;
 var colorString = "";
 
@@ -29,8 +29,15 @@ function setup() {
 // ====================
 
 function mousemove(e) {
-    movement = Math.sqrt(e.movementX ** 2 + e.movementY ** 2) * CIRCLE_SIZE;
-    events.push({x: e.x, y: e.y, r: movement, c: colorString});
+
+    var x = Math.floor(e.x / CELL_SIZE);
+    var y = Math.floor(e.y / CELL_SIZE);
+
+    for (var i = 0; i < squares.length; i++) {
+        if (squares[i].x == x && squares[i].y == y) return;
+    }
+
+    squares.push({x: x, y: y, a: 0, c: colorString});
 }
 
 // draw circles wherever the mouse moves
@@ -43,12 +50,12 @@ function loop() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canv.width, canv.height);
 
-    for (var i = 0; i < events.length; i++) {
-        e = events[i];
-        drawCircle(e.x, e.y, e.r, e.c);
-        e.r -= DECAY;
-        if (e.r <= 0) {
-            events.splice(i, 1);
+    for (var i = 0; i < squares.length; i++) {
+        var square = squares[i];
+        if (square.a > Math.PI * 0.5) drawSquare(square.x, square.y, square.a, square.c);
+        square.a += SPIN_SPEED;
+        if (square.a > Math.PI * 1.5) {
+            squares.splice(i, 1);
             i--;
         }
     }
@@ -57,10 +64,24 @@ function loop() {
 // helper functions
 // ================
 
-function drawCircle(x, y, r, c) {
+function drawSquare(x, y, a, c) {
+    
+    // calculate the offset for this angle
+    var rad2 = Math.sqrt(2);
+    var diagonal = (CELL_SIZE * rad2) / 2;
+    var offset = (diagonal - Math.cos(a) * diagonal) / rad2;
+
+    var startX = x * CELL_SIZE;
+    var startY = y * CELL_SIZE
+
+    // draw the thing
     ctx.fillStyle = c;
     ctx.beginPath();
-    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.moveTo(startX, startY);
+    ctx.lineTo(startX + offset, startY + CELL_SIZE - offset);
+    ctx.lineTo(startX + CELL_SIZE, startY + CELL_SIZE);
+    ctx.lineTo(startX + CELL_SIZE - offset, startY + offset);
+    ctx.lineTo(startX, startY);
     ctx.fill();
 }
 

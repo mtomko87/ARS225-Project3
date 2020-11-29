@@ -1,10 +1,9 @@
 // constants
-const FPS = 10;
+const FPS = 30;
 const CELLSIZE = 20;
-const DECAY = 0.05;
 const CIRCLE_SIZE = 0.01;
 const WAVE_RADIUS = 12;
-const WAVE_SPEED = 0.5;
+const WAVE_SPEED = 1;
 const WAVE_DURATION = 10;
 
 // states

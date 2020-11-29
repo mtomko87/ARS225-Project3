@@ -1,5 +1,5 @@
 // constants
-const FPS = 10;
+const FPS = 30;
 const NUM_CIRCLES = 100;
 const MIN_RAD = 30;
 const MAX_RAD = 300;
