@@ -33,8 +33,8 @@ function mousemove(e) {
     events.push({x: e.x, y: e.y, r: movement, c: colorString});
 }
 
-// draw circles wherever the mouse moves
-// =====================================
+// draw the items
+// ==============
 
 function loop() {
 

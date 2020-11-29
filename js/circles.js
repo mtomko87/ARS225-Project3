@@ -42,8 +42,8 @@ function mousemove(e) {
     mousePos = {x: e.x, y: e.y};
 }
 
-// draw circles
-// ============
+// draw the items
+// ==============
 
 function loop() {
 

@@ -30,8 +30,8 @@ function setup() {
     window.addEventListener('mousemove', e => mousemove(e))
 }
 
-// track mouse movement and check which cells are affected
-// =======================================================
+// track mouse movement
+// ====================
 
 function mousemove(e) {
     
@@ -52,8 +52,8 @@ function mousemove(e) {
     }
 }
 
-// add up all the radius from each mouse movement and draw circle
-// ==============================================================
+// draw the items
+// ==============
 
 function loop() {
 

@@ -1,11 +1,14 @@
 // constants
 const FPS = 30;
-const CELL_SIZE = 50;
-const SPIN_SPEED = 0.1;
+const GRAVITY = 1;
+const BOX_SIZE = 3;
+const GROUND_TIME = 30;
 const COLOR_SPEED = 10;
+const BOX_FREQ = 5;
 
 // states
-var squares = [];
+var boxes = [];
+var boxFreq = 0;
 var color = 0;
 var colorString = "";
 
@@ -30,14 +33,20 @@ function setup() {
 
 function mousemove(e) {
 
-    var x = Math.floor(e.x / CELL_SIZE);
-    var y = Math.floor(e.y / CELL_SIZE);
+    boxFreq++;
+    if (boxFreq != BOX_FREQ) return;
+    boxFreq = 0;
 
-    for (var i = 0; i < squares.length; i++) {
-        if (squares[i].x == x && squares[i].y == y) return;
-    }
-
-    squares.push({x: x, y: y, a: 0, c: colorString});
+    size = Math.abs(e.movementX) * BOX_SIZE;
+    boxes.push({
+        x: e.x - size / 2,
+        y: -size,
+        vel: 0,
+        size: size,
+        grounded: false,
+        groundedDuration: 0,
+        c: colorString
+    });
 }
 
 // draw the items
@@ -50,13 +59,27 @@ function loop() {
     ctx.fillStyle = "black";
     ctx.fillRect(0, 0, canv.width, canv.height);
 
-    for (var i = 0; i < squares.length; i++) {
-        var square = squares[i];
-        if (square.a > Math.PI * 0.5) drawSquare(square.x, square.y, square.a, square.c);
-        square.a += SPIN_SPEED;
-        if (square.a > Math.PI * 1.5) {
-            squares.splice(i, 1);
-            i--;
+    for (var i = 0; i < boxes.length; i++) {
+
+        box = boxes[i];
+        drawSquare(box.x, box.y, box.size, box.c);
+        
+        if (box.grounded) {
+            box.groundedDuration++;
+            if (box.groundedDuration > GROUND_TIME) {
+                boxes.splice(i, 1);
+                i--;
+            }
+        }
+
+        else {
+            box.y += box.vel;
+            box.vel += GRAVITY;
+            var maxY = canvas.height - box.size;
+            if (box.y > maxY) {
+                box.y = maxY;
+                box.grounded = true;
+            }
         }
     }
 }
@@ -64,25 +87,9 @@ function loop() {
 // helper functions
 // ================
 
-function drawSquare(x, y, a, c) {
-    
-    // calculate the offset for this angle
-    var rad2 = Math.sqrt(2);
-    var diagonal = (CELL_SIZE * rad2) / 2;
-    var offset = (diagonal - Math.cos(a) * diagonal) / rad2;
-
-    var startX = x * CELL_SIZE;
-    var startY = y * CELL_SIZE
-
-    // draw the thing
+function drawSquare(x, y, size, c) {
     ctx.fillStyle = c;
-    ctx.beginPath();
-    ctx.moveTo(startX, startY);
-    ctx.lineTo(startX + offset, startY + CELL_SIZE - offset);
-    ctx.lineTo(startX + CELL_SIZE, startY + CELL_SIZE);
-    ctx.lineTo(startX + CELL_SIZE - offset, startY + offset);
-    ctx.lineTo(startX, startY);
-    ctx.fill();
+    ctx.fillRect(x, y, size, size);
 }
 
 function incrementColor() {
