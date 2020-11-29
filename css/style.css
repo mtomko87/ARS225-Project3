@@ -1,0 +1,39 @@
+body {
+    font-family: 'Roboto Slab', serif;
+    margin-left: 30px;
+    margin-right: 30px;
+}
+
+.title {
+    font-size: 80px;
+    margin-bottom: 10px;
+}
+
+.description {
+    font-size: 40px;
+    margin-top: 0px;
+}
+
+.links-box {
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+}
+
+a {
+    font-size: 24px;
+    text-decoration: none;
+    color: black;
+}
+
+a:hover {
+    cursor: pointer;
+    border-bottom: 2px solid black;
+}
+
+p {
+    width: 75%;
+    font-size: 18px;
+}
